@@ -9,13 +9,11 @@ class MemberController extends Controller
 {
     function testApi(Request $req){
         $rules = array(
+            'name'=> 'required | min:5',
             'address'=>'required'
         );
 
-        $validator= Validator::make($req->all(),[
-            'name'=> 'required | min:5',
-            'address'=> 'required',
-        ]);
+        $validator= Validator::make($req->all(),$rules);
 
         if (!$validator->fails()) {
             $member = new Member;
@@ -26,10 +24,8 @@ class MemberController extends Controller
                 return 'one data is added';
             } else {
 
+                return response()->json($validator->errors(),401);
             }
-
-            return 'operation failed';
-
         } else {
             return response()->json($validator->errors(),401);
 
